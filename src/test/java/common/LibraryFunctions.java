@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import org.testng.*;
 public interface LibraryFunctions {
 	
 	public static void selectDropDownValue(WebDriver driver, WebElement dropDwnElement,String value)
@@ -36,6 +37,11 @@ public interface LibraryFunctions {
 		Alert alert = driver.switchTo().alert();
 		alert.accept();
 		
+	}
+	public static void verifyMessage(WebDriver driver, String expectedMsg)
+	{
+		String msg = driver.findElement(By.xpath("//*[@class='alert alert-success']//li")).getText();
+		Assert.assertEquals(msg, expectedMsg, "The expected message doesn't match!");
 	}
 
 

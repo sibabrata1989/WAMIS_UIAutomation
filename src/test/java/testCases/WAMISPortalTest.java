@@ -15,7 +15,7 @@ import common.ExcelHelper;
 import common.TestConfig;
 import pageObjectsRepository.*;
 
-public class StudentRegistration
+public class WAMISPortalTest
 {
 	WebDriver driver = null;
 	ExcelHelper objExcel = null;
@@ -42,14 +42,18 @@ public class StudentRegistration
 	}
 	
 	@Test
-	public void TC01_StudentRegistration() throws Exception
+	public void verifyWorkTypes() throws Exception
 	{
 		try{
-		tcName = "TC01_StudentRegistration";
+		tcName = "TC01_WorkTypes";
 		System.out.println(tcName);
 		objExcel.SetListData(TestConfig.testDataDir + "TestData_CET.xlsx", tcName);
-		CETSignUpPage registrationPage = new CETSignUpPage(driver);
-		registrationPage.studentRegistration(objExcel,0,softassertion);
+		WAMISPortalPage portal = new WAMISPortalPage(driver);
+		portal.loginWAMIS(objExcel, softassertion);
+		portal.homeScreenNavigation(objExcel, softassertion, "Masters", "Work Types");
+		portal.addWorkTypes(objExcel, softassertion);
+		portal.updateWorkTypes(objExcel, softassertion);
+		portal.deleteWorkTypes(objExcel, softassertion);
 		softassertion.assertAll();
 		}
 		catch(Exception e)
