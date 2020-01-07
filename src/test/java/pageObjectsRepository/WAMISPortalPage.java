@@ -30,6 +30,7 @@ public class WAMISPortalPage implements LibraryFunctions
 	String linkWorkPanel = "//h6[contains(text(),'Works')]/../..//*[@class='list-group']/li/a[contains(text(),'%s')]";
 	String linkWorkType = "//div[@id='Masters1']//li//b[contains(text(),'%s')]/..";
 	By lblWorksTypeHeader = By.xpath("//*[@class='panel-heading'][contains(text(),'Work Types')]");
+	By linkWorkInfo = By.xpath("//div[@id='Proposal_Work2']//li//b[contains(text(),'Work Info')]/..");
 	
 	//Add Work types
 	By btnAdd = By.xpath("//input[@name='function'][@value='Add']");
@@ -45,7 +46,31 @@ public class WAMISPortalPage implements LibraryFunctions
 	
 	//Delete WorkTypes
 	By btnDeleteWorkType = By.xpath("//tbody//td[text()='AAA']/../td[6]/a");
-
+	
+	//Add Proposal
+	By txtWorkDesc = By.xpath("//textarea[contains(@name,'workDesc')");
+	By selectProposalType = By.xpath("//select[@name='proposerId']");
+	By selectProposalDept= By.xpath("//select[@name='proposerDepartmentId']");
+	By selectScheme = By.xpath("//select[@name='schemeId']");
+	By txtExtimatedCost = By.xpath("//input[@name='estimatedCost']");
+	By selectMajorHead = By.xpath("//select[@id='majorHeadId']");
+	By selectSubMajorHead = By.xpath("//select[@id='subMajorHeadId']");
+	By selectMinorHead= By.xpath("//select[@id='minorHeadId']");
+	By selectsubMinorHead = By.xpath("//select[@id='subMinorHeadId']");
+	By selectDetailsHead = By.xpath("//select[@id='detailHeadId'");
+	By selectObjectHead = By.xpath("//select[@id='objectHeadId']");
+	By selectBudgetMonth= By.xpath("//select[@name='budgetMonth']");
+	By selectBudgetYear = By.xpath("//select[@name='budgetYear']");
+	By selectWorkType = By.xpath("//select[@name='proposalTypeId']");
+	By selectProposalSubtype = By.xpath("//select[@name='proposalSubTypeId']");
+	By btnProposalSave = By.xpath("//input[contains(@onclick,'save')]");
+	String dropdownOption = "//option[@data-content='%s']";
+	
+	//deposit proposal
+	By btnAddproposalWork = By.xpath("//*[@name='WorkInfoForm']//input[@value='Add']");
+	By rbtnDepositeWorkcategory = By.xpath("//input[@id='workType2']");
+	
+	
 	 
 
 	
@@ -90,6 +115,22 @@ public class WAMISPortalPage implements LibraryFunctions
 			BrowserHelper.SaveScreenshot(objExcel.GetValue(0, "TestCaseName"), driver);
 			e.printStackTrace();
 			Assert.fail("Home screen navigation Failed due to exception!");
+		}
+	}
+	public void proposalScreenNavigation(ExcelHelper objExcel,SoftAssert softassert, String panel) throws Exception
+	{
+		
+		try
+		{
+			driver.findElement(By.xpath(String.format(linkWorkPanel, panel))).click();
+			driver.findElement(linkWorkInfo).click();
+		}
+
+		catch(Exception e)
+		{
+			BrowserHelper.SaveScreenshot(objExcel.GetValue(0, "TestCaseName"), driver);
+			e.printStackTrace();
+			Assert.fail("Proposal screen navigation Failed due to exception!");
 		}
 	}
 	
@@ -154,6 +195,70 @@ public class WAMISPortalPage implements LibraryFunctions
 				BrowserHelper.SaveScreenshot(objExcel.GetValue(0, "TestCaseName"), driver);
 				e.printStackTrace();
 				Assert.fail("Worked Type deletion Failed due to exception!");
+			}
+		
+		}
+	public void addProposalRegularWork(ExcelHelper objExcel,SoftAssert softassert) throws Exception
+	{
+			
+			try
+			{
+				driver.findElement(txtWorkDesc).sendKeys(objExcel.GetValue(0, "workDesc"));
+				LibraryFunctions.selectDropDownValue(driver, selectProposalType, objExcel.GetValue(0, "proposalType"));
+				LibraryFunctions.selectDropDownValue(driver, selectProposalDept, objExcel.GetValue(0, "proposalDept"));
+				LibraryFunctions.selectDropDownValue(driver, selectScheme, objExcel.GetValue(0, "scheme"));
+				driver.findElement(txtExtimatedCost).sendKeys(objExcel.GetValue(0, "estimatedCost"));
+				LibraryFunctions.selectDropDownValue(driver, selectMajorHead, objExcel.GetValue(0, "majorHead"));
+				LibraryFunctions.selectDropDownValue(driver, selectSubMajorHead, objExcel.GetValue(0, "subMajorHead"));
+				LibraryFunctions.selectDropDownValue(driver, selectMinorHead, objExcel.GetValue(0, "minorHead"));
+				LibraryFunctions.selectDropDownValue(driver, selectsubMinorHead, objExcel.GetValue(0, "subMinorHead"));
+				LibraryFunctions.selectDropDownValue(driver, selectDetailsHead, objExcel.GetValue(0, "detailsHead"));
+				LibraryFunctions.selectDropDownValue(driver, selectObjectHead, objExcel.GetValue(0, "objectHead"));
+				LibraryFunctions.selectDropDownValue(driver, selectBudgetMonth, objExcel.GetValue(0, "budgetMonth"));
+				LibraryFunctions.selectDropDownValue(driver, selectBudgetYear, objExcel.GetValue(0, "budgetYear"));
+				LibraryFunctions.selectDropDownValue(driver, selectWorkType, objExcel.GetValue(0, "workType"));
+				LibraryFunctions.selectDropDownValue(driver, selectProposalSubtype, objExcel.GetValue(0, "proposalSubType"));
+				driver.findElement(btnProposalSave).click();
+				LibraryFunctions.verifyMessage(driver, "Record Saved Successfully");
+				
+			}
+
+			catch(Exception e)
+			{
+				BrowserHelper.SaveScreenshot(objExcel.GetValue(0, "TestCaseName"), driver);
+				e.printStackTrace();
+				Assert.fail("Add WorkType Failed due to exception!");
+			}
+		
+		}
+	public void addProposalDepositWork(ExcelHelper objExcel,SoftAssert softassert) throws Exception
+	{
+			
+			try
+			{
+				
+				driver.findElement(btnAddproposalWork).click();
+				driver.findElement(rbtnDepositeWorkcategory).click();
+				
+				LibraryFunctions.selectDropDownValue(driver, selectProposalType, objExcel.GetValue(0, "proposalType"));
+				LibraryFunctions.selectDropDownValue(driver, selectProposalDept, objExcel.GetValue(0, "proposalDept"));
+				LibraryFunctions.selectDropDownValue(driver, selectScheme, objExcel.GetValue(0, "scheme"));
+				driver.findElement(txtExtimatedCost).sendKeys(objExcel.GetValue(0, "estimatedCost"));
+				
+				LibraryFunctions.selectDropDownValue(driver, selectBudgetMonth, objExcel.GetValue(0, "budgetMonth"));
+				LibraryFunctions.selectDropDownValue(driver, selectBudgetYear, objExcel.GetValue(0, "budgetYear"));
+				LibraryFunctions.selectDropDownValue(driver, selectWorkType, objExcel.GetValue(0, "workType"));
+				LibraryFunctions.selectDropDownValue(driver, selectProposalSubtype, objExcel.GetValue(0, "proposalSubType"));
+				driver.findElement(btnProposalSave).click();
+				LibraryFunctions.verifyMessage(driver, "Record Saved Successfully");
+				
+			}
+
+			catch(Exception e)
+			{
+				BrowserHelper.SaveScreenshot(objExcel.GetValue(0, "TestCaseName"), driver);
+				e.printStackTrace();
+				Assert.fail("Add WorkType Failed due to exception!");
 			}
 		
 		}

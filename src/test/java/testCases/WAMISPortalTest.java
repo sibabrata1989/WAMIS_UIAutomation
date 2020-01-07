@@ -50,7 +50,7 @@ public class WAMISPortalTest
 		objExcel.SetListData(TestConfig.testDataDir + "TestData_CET.xlsx", tcName);
 		WAMISPortalPage portal = new WAMISPortalPage(driver);
 		portal.loginWAMIS(objExcel, softassertion);
-		portal.homeScreenNavigation(objExcel, softassertion, "Masters", "Work Types");
+		portal.homeScreenNavigation(objExcel,softassertion , "Masters", "Work Types");
 		portal.addWorkTypes(objExcel, softassertion);
 		portal.updateWorkTypes(objExcel, softassertion);
 		portal.deleteWorkTypes(objExcel, softassertion);

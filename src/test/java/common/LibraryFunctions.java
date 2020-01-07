@@ -7,9 +7,10 @@ import org.openqa.selenium.support.ui.Select;
 import org.testng.*;
 public interface LibraryFunctions {
 	
-	public static void selectDropDownValue(WebDriver driver, WebElement dropDwnElement,String value)
+	public static void selectDropDownValue(WebDriver driver, By xpath ,String value)
 	{
-		Select degreeDropDown = new Select(dropDwnElement);
+		WebElement dropDown = driver.findElement(xpath);
+		Select degreeDropDown = new Select(dropDown);
 		degreeDropDown.selectByVisibleText(value);
 		
 	}
