@@ -51,7 +51,7 @@ public class WAMISPortalTest
 		WAMISPortalPage portal = new WAMISPortalPage(driver);
 		portal.loginWAMIS(objExcel, softassertion);
 		portal.homeScreenNavigation(objExcel,softassertion , "Masters", "Work Types");
-		portal.addWorkTypes(objExcel, softassertion);
+		portal.addWorkTypes(objExcel,softassertion);
 		portal.updateWorkTypes(objExcel, softassertion);
 		portal.deleteWorkTypes(objExcel, softassertion);
 		softassertion.assertAll();
@@ -62,6 +62,8 @@ public class WAMISPortalTest
 			BrowserHelper.SaveScreenshot(tcName, driver);
 		}
 	}
+
+	
 
 	
 	@AfterMethod

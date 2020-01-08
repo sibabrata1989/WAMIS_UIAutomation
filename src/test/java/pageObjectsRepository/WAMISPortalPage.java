@@ -2,6 +2,10 @@ package pageObjectsRepository;
 
 
 import org.testng.*;
+
+import java.util.Iterator;
+import java.util.Set;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -26,11 +30,12 @@ public class WAMISPortalPage implements LibraryFunctions
 	By btnLogin = By.xpath("//button[contains(@class,'btn btn-success')][contains(text(),'Login')]");
 	By lblHeader = By.xpath("//div[@class='header']");
 	
-	//Home Screen
+	//Navigation Screen
 	String linkWorkPanel = "//h6[contains(text(),'Works')]/../..//*[@class='list-group']/li/a[contains(text(),'%s')]";
 	String linkWorkType = "//div[@id='Masters1']//li//b[contains(text(),'%s')]/..";
 	By lblWorksTypeHeader = By.xpath("//*[@class='panel-heading'][contains(text(),'Work Types')]");
 	By linkWorkInfo = By.xpath("//div[@id='Proposal_Work2']//li//b[contains(text(),'Work Info')]/..");
+	String linkAAandTSDetails = "//div[@id='Approvals3']//li//b[contains(text(),'%s')]/..";
 	
 	//Add Work types
 	By btnAdd = By.xpath("//input[@name='function'][@value='Add']");
@@ -70,9 +75,20 @@ public class WAMISPortalPage implements LibraryFunctions
 	By btnAddproposalWork = By.xpath("//*[@name='WorkInfoForm']//input[@value='Add']");
 	By rbtnDepositeWorkcategory = By.xpath("//input[@id='workType2']");
 	
+	//AA & TS Details
+	By btnParentAANumber= By.xpath("//a[@class='btn-link']//span[@class='glyphicon glyphicon-search']");
+	By rbtnWorkButton = By.xpath("//input[@name='selectedWorkNumber']");
+	By selectApprovingAuthority = By.xpath("//select[@name='aaAuthority']");
+	By selectApprovingAmount = By.xpath("//input[@name='aaAmount']");
+	By selectTSAuthoriy = By.xpath("//select[@name='tsAuthority']");
+	By selectTSSrYear = By.xpath("//select[@name='tsSrYear']");
+	By selectZoneId = By.xpath("//select[@name='zoneId']");
+	By txtTSAmount = By.xpath("//input[@name='tsAmount']");
 	
-	 
-
+	//Logout
+	By btnWelcome = By.xpath("//button[@class='btn btn-sm btn-info dropdown-toggle']");
+	By btnLogout = By.xpath("//a[@href='/wamis/logout.do']");
+	
 	
 	public void loginWAMIS(ExcelHelper objExcel,SoftAssert softAssert) throws Exception
 	{
@@ -97,6 +113,23 @@ public class WAMISPortalPage implements LibraryFunctions
 			Assert.fail("WAMIS Login Failed due to exception!");
 		}
 		
+	}
+	
+	public void logout(ExcelHelper objExcel,SoftAssert softassert) throws Exception
+	{
+		
+		try
+		{
+			driver.findElement(btnWelcome).click();
+			driver.findElement(btnLogout).click();
+		}
+
+		catch(Exception e)
+		{
+			BrowserHelper.SaveScreenshot(objExcel.GetValue(0, "TestCaseName"), driver);
+			e.printStackTrace();
+			Assert.fail("Logout Failed due to exception!");
+		}
 	}
 		
 	public void homeScreenNavigation(ExcelHelper objExcel,SoftAssert softassert, String panel, String masterPanel) throws Exception
@@ -134,6 +167,23 @@ public class WAMISPortalPage implements LibraryFunctions
 		}
 	}
 	
+
+	public void approvalScreensNavigation(ExcelHelper objExcel,SoftAssert softassert, String panel, String link) throws Exception
+	{
+		
+		try
+		{
+			driver.findElement(By.xpath(String.format(linkWorkPanel, panel))).click();
+			driver.findElement(By.xpath(String.format(linkAAandTSDetails, link))).click();
+		}
+
+		catch(Exception e)
+		{
+			BrowserHelper.SaveScreenshot(objExcel.GetValue(0, "TestCaseName"), driver);
+			e.printStackTrace();
+			Assert.fail("Approval screen navigation Failed due to exception!");
+		}
+	}
 	public void addWorkTypes(ExcelHelper objExcel,SoftAssert softassert) throws Exception
 	{
 			
@@ -262,5 +312,97 @@ public class WAMISPortalPage implements LibraryFunctions
 			}
 		
 		}
+	
+	public void addAADetails(ExcelHelper objExcel,SoftAssert softassert) throws Exception
+	{
+			
+			try
+			{
+				
+				driver.findElement(btnParentAANumber).click();
+				 String MainWindow=driver.getWindowHandle();		
+	        		
+			        // To handle all new opened window.				
+			        Set<String> s1=driver.getWindowHandles();		
+			        Iterator<String> i1=s1.iterator();		
+			        		
+			        while(i1.hasNext())			
+			        {		
+			            String ChildWindow=i1.next();		
+			            		
+			            if(!MainWindow.equalsIgnoreCase(ChildWindow))			
+			            {    		
+			                 
+			                    // Switching to Child window
+			                    driver.switchTo().window(ChildWindow);	                                                                                                           
+			                    driver.findElement(rbtnWorkButton).click();     			
+			                    
+			            }		
+			        }		
+			        // Switching to Parent window i.e Main Window.
+			            driver.switchTo().window(MainWindow);
+				
+				LibraryFunctions.selectDropDownValue(driver, selectApprovingAuthority, objExcel.GetValue(0, "approvingAuthority"));
+				LibraryFunctions.selectDropDownValue(driver, selectApprovingAmount, objExcel.GetValue(0, "approvingAmount"));
+				driver.findElement(btnSave).click();
+				LibraryFunctions.verifyMessage(driver, "Record Saved Successfully");
+				
+			}
+
+			catch(Exception e)
+			{
+				BrowserHelper.SaveScreenshot(objExcel.GetValue(0, "TestCaseName"), driver);
+				e.printStackTrace();
+				Assert.fail("Add AA Approvals Failed due to exception!");
+			}
+		
+		}
+	
+	public void addTSDetails(ExcelHelper objExcel,SoftAssert softassert) throws Exception
+	{
+			
+		try
+		{
+			
+			driver.findElement(btnParentAANumber).click();
+			 String MainWindow=driver.getWindowHandle();		
+        		
+		        // To handle all new opened window.				
+		        Set<String> s1=driver.getWindowHandles();		
+		        Iterator<String> i1=s1.iterator();		
+		        		
+		        while(i1.hasNext())			
+		        {		
+		            String ChildWindow=i1.next();		
+		            		
+		            if(!MainWindow.equalsIgnoreCase(ChildWindow))			
+		            {    		
+		                 
+		                    // Switching to Child window
+		                    driver.switchTo().window(ChildWindow);	                                                                                                           
+		                    driver.findElement(rbtnWorkButton).click();     			
+		                    
+		            }		
+		        }		
+		        // Switching to Parent window i.e Main Window.
+		            driver.switchTo().window(MainWindow);
+			
+			LibraryFunctions.selectDropDownValue(driver, selectTSAuthoriy, objExcel.GetValue(0, "tsAuthority"));
+			LibraryFunctions.selectDropDownValue(driver, selectTSSrYear, objExcel.GetValue(0, "tsYear"));
+			LibraryFunctions.selectDropDownValue(driver, selectZoneId, objExcel.GetValue(0, "zoneID"));
+			LibraryFunctions.selectDropDownValue(driver, txtTSAmount, objExcel.GetValue(0, "tsAmount"));
+			driver.findElement(btnSave).click();
+			LibraryFunctions.verifyMessage(driver, "Record Saved Successfully");
+			
+		}
+
+		catch(Exception e)
+		{
+			BrowserHelper.SaveScreenshot(objExcel.GetValue(0, "TestCaseName"), driver);
+			e.printStackTrace();
+			Assert.fail("Add AA Approvals Failed due to exception!");
+		}
+	
+	}
 	}
 
