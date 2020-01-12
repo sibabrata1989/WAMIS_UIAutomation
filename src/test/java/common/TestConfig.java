@@ -10,7 +10,7 @@ public class TestConfig
 {
 	public static String baseDir, testDataDir, testConfigDir, testResultDir, testResourcesDir,testRunDir;
 	public static  String browserEnv, driverPath;
-	public static  String SCETUrl;
+	public static  String WAMISurl;
 	
 	public static void SetCommonEnv()
 	{
@@ -32,7 +32,7 @@ public class TestConfig
 		
 		browserEnv = props.getProperty("browserEnv"); // Load the Browser type as given in the property file
 		driverPath = testResourcesDir + props.getProperty("driverPath_" + browserEnv );// picks the driver browser key from the property file.
-		SCETUrl = props.getProperty("SCETUrl");
+		WAMISurl = props.getProperty("WAMISurl");
 		
 		}
 		catch(Exception e)

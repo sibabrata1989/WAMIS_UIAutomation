@@ -266,7 +266,7 @@ public class WAMISPortalPage implements LibraryFunctions
 				LibraryFunctions.selectDropDownValue(driver, selectObjectHead, objExcel.GetValue(0, "objectHead"));
 				LibraryFunctions.selectDropDownValue(driver, selectBudgetMonth, objExcel.GetValue(0, "budgetMonth"));
 				LibraryFunctions.selectDropDownValue(driver, selectBudgetYear, objExcel.GetValue(0, "budgetYear"));
-				LibraryFunctions.selectDropDownValue(driver, selectWorkType, objExcel.GetValue(0, "workType"));
+				LibraryFunctions.selectDropDownValue(driver, selectWorkType, objExcel.GetValue(0, "proposalWorkType"));
 				LibraryFunctions.selectDropDownValue(driver, selectProposalSubtype, objExcel.GetValue(0, "proposalSubType"));
 				driver.findElement(btnProposalSave).click();
 				LibraryFunctions.verifyMessage(driver, "Record Saved Successfully");
@@ -287,7 +287,7 @@ public class WAMISPortalPage implements LibraryFunctions
 			try
 			{
 				
-				driver.findElement(btnAddproposalWork).click();
+				//driver.findElement(btnAddproposalWork).click();
 				driver.findElement(rbtnDepositeWorkcategory).click();
 				
 				LibraryFunctions.selectDropDownValue(driver, selectProposalType, objExcel.GetValue(0, "proposalType"));
@@ -297,7 +297,7 @@ public class WAMISPortalPage implements LibraryFunctions
 				
 				LibraryFunctions.selectDropDownValue(driver, selectBudgetMonth, objExcel.GetValue(0, "budgetMonth"));
 				LibraryFunctions.selectDropDownValue(driver, selectBudgetYear, objExcel.GetValue(0, "budgetYear"));
-				LibraryFunctions.selectDropDownValue(driver, selectWorkType, objExcel.GetValue(0, "workType"));
+				LibraryFunctions.selectDropDownValue(driver, selectWorkType, objExcel.GetValue(0, "proposalWorkType"));
 				LibraryFunctions.selectDropDownValue(driver, selectProposalSubtype, objExcel.GetValue(0, "proposalSubType"));
 				driver.findElement(btnProposalSave).click();
 				LibraryFunctions.verifyMessage(driver, "Record Saved Successfully");

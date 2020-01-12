@@ -27,9 +27,9 @@ public class WAMISPortalTest
 	public void classSetup()
 	{
 		objExcel = new ExcelHelper();
-		objExcel.SetListHeader(TestConfig.testDataDir + "TestData_CET.xlsx", 0);
+		objExcel.SetListHeader(TestConfig.testDataDir + "WAMIS_TestData.xlsx", 0);
 		driver = BrowserHelper.LaunchBrowser(driver);
-		driver.get((TestConfig.SCETUrl));
+		driver.get((TestConfig.WAMISurl));
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS) ;
 	}
@@ -41,13 +41,13 @@ public class WAMISPortalTest
 		softassertion = new SoftAssert();
 	}
 	
-	@Test
+	@Test(priority = 1)
 	public void verifyWorkTypes() throws Exception
 	{
 		try{
 		tcName = "TC01_WorkTypes";
 		System.out.println(tcName);
-		objExcel.SetListData(TestConfig.testDataDir + "TestData_CET.xlsx", tcName);
+		objExcel.SetListData(TestConfig.testDataDir + "WAMIS_TestData.xlsx", tcName);
 		WAMISPortalPage portal = new WAMISPortalPage(driver);
 		portal.loginWAMIS(objExcel, softassertion);
 		portal.homeScreenNavigation(objExcel,softassertion , "Masters", "Work Types");
@@ -63,7 +63,82 @@ public class WAMISPortalTest
 		}
 	}
 
-	
+	@Test(priority = 2)
+	public void addRegularProposals() throws Exception
+	{
+		try{
+		tcName = "TC02_AddRegularProposals";
+		System.out.println("TestCase running is - "+tcName);
+		objExcel.SetListData(TestConfig.testDataDir + "WAMIS_TestData.xlsx", tcName);
+		WAMISPortalPage portal = new WAMISPortalPage(driver);
+		portal.loginWAMIS(objExcel, softassertion);
+		portal.proposalScreenNavigation(objExcel,softassertion , "Proposal Work");
+		portal.addProposalRegularWork(objExcel,softassertion);
+		softassertion.assertAll();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			BrowserHelper.SaveScreenshot(tcName, driver);
+		}
+	}
+	@Test(priority = 3)
+	public void addDepositProposals() throws Exception
+	{
+		try{
+		tcName = "TC03_AddDepositProposals";
+		System.out.println("TestCase running is - "+tcName);
+		objExcel.SetListData(TestConfig.testDataDir + "WAMIS_TestData.xlsx", tcName);
+		WAMISPortalPage portal = new WAMISPortalPage(driver);
+		portal.loginWAMIS(objExcel, softassertion);
+		portal.proposalScreenNavigation(objExcel,softassertion , "Proposal Work");
+		portal.addProposalDepositWork(objExcel, softassertion);
+		softassertion.assertAll();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			BrowserHelper.SaveScreenshot(tcName, driver);
+		}
+	}
+	@Test(priority = 4)
+	public void addAADetails() throws Exception
+	{
+		try{
+		tcName = "TC04_AddAADetails";
+		System.out.println("TestCase running is - "+tcName);
+		objExcel.SetListData(TestConfig.testDataDir + "WAMIS_TestData.xlsx", tcName);
+		WAMISPortalPage portal = new WAMISPortalPage(driver);
+		portal.loginWAMIS(objExcel, softassertion);
+		portal.approvalScreensNavigation(objExcel,softassertion,"Approvals", "AA Details");
+		portal.addAADetails(objExcel,softassertion);
+		softassertion.assertAll();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			BrowserHelper.SaveScreenshot(tcName, driver);
+		}
+	}
+	@Test(priority = 5)
+	public void addTSDetails() throws Exception
+	{
+		try{
+		tcName = "TC05_AddTSDetails";
+		System.out.println("TestCase running is - "+tcName);
+		objExcel.SetListData(TestConfig.testDataDir + "WAMIS_TestData.xlsx", tcName);
+		WAMISPortalPage portal = new WAMISPortalPage(driver);
+		portal.loginWAMIS(objExcel, softassertion);
+		portal.approvalScreensNavigation(objExcel,softassertion,"Approvals", "TS Details");
+		portal.addTSDetails(objExcel,softassertion);
+		softassertion.assertAll();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			BrowserHelper.SaveScreenshot(tcName, driver);
+		}
+	}
 
 	
 	@AfterMethod
@@ -75,7 +150,7 @@ public class WAMISPortalTest
 	@AfterClass
 	public void CloseDriver()
 	{
-		//driver.close();
+		driver.close();
 	}
 	
 }
