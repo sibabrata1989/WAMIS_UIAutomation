@@ -54,12 +54,14 @@ public class WAMISPortalTest
 		portal.addWorkTypes(objExcel,softassertion);
 		portal.updateWorkTypes(objExcel, softassertion);
 		portal.deleteWorkTypes(objExcel, softassertion);
+		portal.logout(objExcel, softassertion);
 		softassertion.assertAll();
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
 			BrowserHelper.SaveScreenshot(tcName, driver);
+			e.printStackTrace();
+			
 		}
 	}
 
@@ -74,12 +76,13 @@ public class WAMISPortalTest
 		portal.loginWAMIS(objExcel, softassertion);
 		portal.proposalScreenNavigation(objExcel,softassertion , "Proposal Work");
 		portal.addProposalRegularWork(objExcel,softassertion);
+		portal.logout(objExcel, softassertion);
 		softassertion.assertAll();
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
 			BrowserHelper.SaveScreenshot(tcName, driver);
+			e.printStackTrace();
 		}
 	}
 	@Test(priority = 3)
@@ -93,12 +96,13 @@ public class WAMISPortalTest
 		portal.loginWAMIS(objExcel, softassertion);
 		portal.proposalScreenNavigation(objExcel,softassertion , "Proposal Work");
 		portal.addProposalDepositWork(objExcel, softassertion);
+		portal.logout(objExcel, softassertion);
 		softassertion.assertAll();
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
 			BrowserHelper.SaveScreenshot(tcName, driver);
+			e.printStackTrace();
 		}
 	}
 	@Test(priority = 4)
@@ -112,12 +116,13 @@ public class WAMISPortalTest
 		portal.loginWAMIS(objExcel, softassertion);
 		portal.approvalScreensNavigation(objExcel,softassertion,"Approvals", "AA Details");
 		portal.addAADetails(objExcel,softassertion);
+		portal.logout(objExcel, softassertion);
 		softassertion.assertAll();
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
 			BrowserHelper.SaveScreenshot(tcName, driver);
+			e.printStackTrace();
 		}
 	}
 	@Test(priority = 5)
@@ -131,12 +136,13 @@ public class WAMISPortalTest
 		portal.loginWAMIS(objExcel, softassertion);
 		portal.approvalScreensNavigation(objExcel,softassertion,"Approvals", "TS Details");
 		portal.addTSDetails(objExcel,softassertion);
+		portal.logout(objExcel, softassertion);
 		softassertion.assertAll();
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
 			BrowserHelper.SaveScreenshot(tcName, driver);
+			e.printStackTrace();
 		}
 	}
 
