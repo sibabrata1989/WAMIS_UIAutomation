@@ -47,11 +47,10 @@ public class ZS_Automation implements LibraryFunctions {
         WrapperFunctionUtilities.waitForTime(3000);
     }
 
-
+    String[] process = {"FILE_CLEAN_UP","DATA_TRANSFER","FILE_CHECK","DATA_INGESTION","FILE_ARCHIVAL"};
     //verify job status
-    public void verifyJobStatus(String objectName, String status)
+    public void verifyJobStatus(String[] process, String objectName, String status)
     {
-        String[] process = {"FILE_CLEAN_UP","DATA_TRANSFER","FILE_CHECK","DATA_INGESTION","FILE_ARCHIVAL"};
         for (int i = 0; i < process.length; i++) {
             String object = driver.findElement(By.xpath("+i+")).getText();
             if(object.equalsIgnoreCase(objectName))
@@ -64,9 +63,12 @@ public class ZS_Automation implements LibraryFunctions {
                     {
                         Wait wait = new FluentWait<>(driver).withTimeout(30, TimeUnit.SECONDS).pollingEvery(10, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
                         wait.until(ExpectedConditions.textToBe(By.xpath(""),""));
+                        if(status=="FAILED"||status=="COMPLETED ")
                         driver.findElement(By.xpath("logs")).click();
-                        String errorCount = driver.findElement(By.xpath("")).getText();
-                        WrapperFunctionUtilities.waitForTime(2000);
+                        {
+                            String errorCount = driver.findElement(By.xpath("")).getText();
+                            WrapperFunctionUtilities.waitForTime(2000);
+                        }
                         Assert.assertEquals(errorCount.equals("0"),"The "+processName+" have errors in log!");
 
                     }
@@ -75,6 +77,21 @@ public class ZS_Automation implements LibraryFunctions {
 
             }
         }
+    }
+
+    //Method 2*****************************************************
+    public void navigateConfiguration()
+    {
+        tabConfiguration.click();
+        WrapperFunctionUtilities.waitForTime(2000);
+    }
+
+    public void stopJobs()
+    {
+        rbtnAllJobs.click();
+        btnStop.click();
+        WrapperFunctionUtilities.waitForTime(2000);
+
     }
 
 
