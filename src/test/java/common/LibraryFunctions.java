@@ -5,6 +5,27 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.*;
+
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import io.restassured.path.json.JsonPath;
+import io.restassured.path.xml.XmlPath;
+import io.restassured.response.Response;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.*;
+import java.io.FileReader;
 public interface LibraryFunctions {
 	
 	public static void selectDropDownValue(WebDriver driver, By xpath ,String value)
@@ -45,5 +66,25 @@ public interface LibraryFunctions {
 		Assert.assertEquals(msg, expectedMsg, "The expected message doesn't match!");
 	}
 
+
+	//Pulling Data from JSON datasheet
+	static String getTestData(String path, String index) {
+
+		JSONParser parser=new JSONParser();
+		JSONObject data=new JSONObject();
+		try {
+			JSONObject fileData = (JSONObject)parser.parse(new FileReader(path));
+			data=(JSONObject) fileData.get(index);
+		} catch (IOException | ParseException e) {
+			e.printStackTrace();
+		}
+		return data.toJSONString();
+	}
+	public static JsonPath Raw_to_Json(String res)
+	{
+
+		JsonPath json = new JsonPath(res);
+		return json;
+	}
 
 }

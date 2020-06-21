@@ -1,4 +1,7 @@
 package pageObjectsRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.path.json.JsonPath;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -6,8 +9,8 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.testng.*;
 
-import java.util.Iterator;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -32,8 +35,8 @@ public class ZS_Automation implements LibraryFunctions {
         driver.findElement(By.xpath("")).click();
     }
 
-    //Search Configurations
-     public void searchConfiguration(String configuration)
+   //Search Configurations
+    public void searchConfiguration(String configuration)
      {
          driver.findElement(By.xpath("")).sendKeys(configuration);
          driver.findElement(By.xpath("")).click();
@@ -47,30 +50,62 @@ public class ZS_Automation implements LibraryFunctions {
         WrapperFunctionUtilities.waitForTime(3000);
     }
 
-    String[] process = {"FILE_CLEAN_UP","DATA_TRANSFER","FILE_CHECK","DATA_INGESTION","FILE_ARCHIVAL"};
     //verify job status
-    public void verifyJobStatus(String[] process, String objectName, String status)
-    {
-        for (int i = 0; i < process.length; i++) {
-            String object = driver.findElement(By.xpath("+i+")).getText();
+    public void verifyJobStatus(String process, String objectName, String status) throws IOException, InterruptedException {
+        String testData = LibraryFunctions.getTestData("src/Resources/TestData.json",process);
+        JsonPath js= LibraryFunctions.Raw_to_Json(testData);
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, String> map = new HashMap<String, String>();
+        // convert JSON string to Map
+        map = mapper.readValue(testData, new TypeReference<Map<String, Object>>() {});
+        for (int i = 1; i <= map.keySet().size(); i++) {
+            String object = driver.findElement(By.xpath("//div[@class='moduleJobs']//tr["+i+"]//td[2]")).getText();
             if(object.equalsIgnoreCase(objectName))
             {
-                String processName = driver.findElement(By.xpath("+i+")).getText();
-                for (String temp :process) {
-                    Assert.assertEquals(processName,temp,"The process name not found!");
-                    String actualStatus = driver.findElement(By.xpath("")).getText();
+                String processName = driver.findElement(By.xpath("//div[@class='moduleJobs']//tbody//tr["+i+"]//td[1]")).getText();
+                for (String temp :map.keySet()) {
+                    //  Assert.assertEquals(processName,temp,"The process name not found!");
+                    Assert.assertTrue(Arrays.asList(map.keySet()).contains(processName),"The process name not found!");
+                    String actualStatus = driver.findElement(By.xpath("//tr["+i+"]//td[9]//span[1]")).getAttribute("title");
                     if(!actualStatus.equalsIgnoreCase(status))
                     {
-                        Wait wait = new FluentWait<>(driver).withTimeout(30, TimeUnit.SECONDS).pollingEvery(10, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
-                        wait.until(ExpectedConditions.textToBe(By.xpath(""),""));
-                        if(status=="FAILED"||status=="COMPLETED ")
-                        driver.findElement(By.xpath("logs")).click();
+                        //Wait wait = new FluentWait<>(driver).withTimeout(3, TimeUnit.MINUTES).pollingEvery(10, TimeUnit.MINUTES).ignoring(NoSuchElementException.class);
+                        String currentStatus = driver.findElement(By.xpath("//tr["+i+"]//td[9]//span[@title='COMPLETE']")).getText();
+                        while(currentStatus!="COMPLETE")
                         {
-                            String errorCount = driver.findElement(By.xpath("")).getText();
-                            WrapperFunctionUtilities.waitForTime(2000);
+                            Thread.sleep(70000);
+                            driver.navigate().refresh();
                         }
-                        Assert.assertEquals(errorCount.equals("0"),"The "+processName+" have errors in log!");
+                        String finalStatus = driver.findElement(By.xpath("//tr["+i+"]//td[9]//span[1]")).getAttribute("title");
+                        if(finalStatus=="COMPLETED")
+                        {
+                            Assert.assertEquals(status.equalsIgnoreCase(finalStatus),"The final Status is not "+status);
+                            driver.findElement(By.xpath("//tr["+i+"]//td[10]//a[1]")).click();
+                            WrapperFunctionUtilities.waitForTime(2000);
+                            String errorCount = driver.findElement(By.xpath("//span[@id='totalErrors']")).getText();
+                            Assert.assertEquals(errorCount.equals("0"),"The "+processName+" have errors in log!");
+                        }
+                        else if(finalStatus=="FAILED")
+                        {
+                            Assert.assertEquals(status.equalsIgnoreCase(finalStatus),"The final Status is not "+status);
+                            driver.findElement(By.xpath("//tr["+i+"]//td[10]//a[1]")).click();
+                            WrapperFunctionUtilities.waitForTime(2000);
+                            int errorCount = Integer.parseInt(driver.findElement(By.xpath("//span[@id='totalErrors']")).getText());
+                            Assert.assertTrue(errorCount>0,"The "+processName+" have errors in log!");
+                        }
+                        else if (finalStatus=="CANCELLED")
+                        {
+                            Assert.assertEquals(status.equalsIgnoreCase(finalStatus),"The final Status is not "+status);
+                        }
+                        else if (finalStatus=="SUBMITTED")
+                        {
+                            Assert.assertEquals(status.equalsIgnoreCase("CANCELLED"),"The final Status is not "+status);
+                        }
 
+                        else if (finalStatus=="UNKNOWN")
+                        {
+                            Assert.assertEquals(status.equalsIgnoreCase("CANCELLED"),"The final Status is not "+status);
+                        }
                     }
                 }
 
@@ -93,7 +128,6 @@ public class ZS_Automation implements LibraryFunctions {
         WrapperFunctionUtilities.waitForTime(2000);
 
     }
-
 
 
 }
